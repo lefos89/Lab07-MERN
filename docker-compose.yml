@@ -1,6 +1,4 @@
-
 services:
-  # MongoDB Service
   mongo:
     image: mongo
     ports:
@@ -10,15 +8,10 @@ services:
     volumes:
       - mongo-data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "root"
-      MONGODB_USER: "todos"
-      MONGODB_PASSWORD: "todos"
-      MONGODB_NAME: "todo"
-    command: ["mongod", "--bind_ip_all"]
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: todo
 
-
-  # Express.js (Node.js) Backend Service
   backend:
     build:
       context: ./backend
@@ -27,11 +20,10 @@ services:
     depends_on:
       - mongo
     environment:
-      MONGO_URI: mongodb://mongo:27017/todo
+      MONGO_URI: mongodb://root:root@mongo:27017/todo?authSource=admin
     networks:
       - mynet
 
-  # React Frontend Service
   frontend:
     build:
       context: ./frontend
@@ -45,5 +37,3 @@ networks:
 
 volumes:
   mongo-data:
-
-  

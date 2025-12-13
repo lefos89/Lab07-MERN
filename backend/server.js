@@ -4,7 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose') 
 const cors = require('cors') 
 const TodoModel = require("./models/todoList") 
-
+const MONGO_URL=process.env.MONGO_URI ;
 var app = express(); 
 app.use(cors()); 
 app.use(express.json()); 
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // Connect to your MongoDB database (replace with your database URL) 
-mongoose.connect("mongodb://todos:todos@mongo:27017/todo", {
+mongoose.connect(MONGO_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 }
