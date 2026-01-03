@@ -5,12 +5,18 @@ const mongoose = require('mongoose');
 const todoSchema = new mongoose.Schema({ 
 	task: { 
 		type: String, 
-		required: true, 
+	
 	}, 
 	status: { 
 		type: String, 
-		required: true, 
-	}, 
+	},
+	description: { 
+		type: String,
+	},
+	category: { 
+		type: String, 
+	 
+	},
 	deadline: { 
 		type: Date, 
 	}, 

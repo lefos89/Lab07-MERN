@@ -46,7 +46,9 @@ app.get("/api/getTodoList", (req, res) => {
 app.post("/api/addTodoList", (req, res) => { 
 	TodoModel.create({ 
 		task: req.body.task, 
-		status: req.body.status, 
+		status: req.body.status,
+		description: req.body.description, 
+		category: req.body.category,  
 		deadline: req.body.deadline, 
 	}) 
 		.then((todo) => res.json(todo)) 
@@ -58,7 +60,9 @@ app.post("/api/updateTodoList/:id", (req, res) => {
 	const id = req.params.id; 
 	const updateData = { 
 		task: req.body.task, 
-		status: req.body.status, 
+		status: req.body.status,
+		description: req.body.description, 
+		category: req.body.category,		 
 		deadline: req.body.deadline, 
 	}; 
 	TodoModel.findByIdAndUpdate(id, updateData) 

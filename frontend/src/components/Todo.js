@@ -10,7 +10,11 @@ function Todo() {
 	const [editedTask, setEditedTask] = useState(""); 
 	const [editedStatus, setEditedStatus] = useState(""); 
 	const [newTask, setNewTask] = useState(""); 
-	const [newStatus, setNewStatus] = useState(""); 
+	const [newStatus, setNewStatus] = useState("");
+	const [newDescription, setNewDescription] = useState(""); 
+	const [editedDescription, setEditedDescription] = useState(""); 
+	const [newCategory, setNewCategory] = useState(""); 
+	const [editedCategory, setEditedCategory] = useState("");  
 	const [newDeadline, setNewDeadline] = useState(""); 
 	const [editedDeadline, setEditedDeadline] = useState(""); 
 
@@ -29,12 +33,16 @@ function Todo() {
 		if (rowData) { 
 			setEditableId(id); 
 			setEditedTask(rowData.task); 
-			setEditedStatus(rowData.status); 
+			setEditedStatus(rowData.status);
+			setEditedDescription(rowData.description);
+			setEditedCategory(rowData.category); 
 			setEditedDeadline(rowData.deadline || ""); 
 		} else { 
 			setEditableId(null); 
 			setEditedTask(""); 
 			setEditedStatus(""); 
+			setEditedDescription("");
+			setEditedCategory("");
 			setEditedDeadline(""); 
 		} 
 	}; 
@@ -43,12 +51,12 @@ function Todo() {
 	// Function to add task to the database 
 	const addTask = (e) => { 
 		e.preventDefault(); 
-		if (!newTask || !newStatus || !newDeadline) { 
+		if (!newTask || !newStatus|| !newDescription|| !newCategory || !newDeadline) { 
 			alert("All fields must be filled out."); 
 			return; 
 		} 
 
-		axios.post('/api/addTodoList', { task: newTask, status: newStatus, deadline: newDeadline }) 
+		axios.post('/api/addTodoList', { task: newTask, status: newStatus, description: newDescription, category : newCategory, deadline: newDeadline }) 
 			.then(res => { 
 				console.log(res); 
 				window.location.reload(); 
@@ -60,12 +68,14 @@ function Todo() {
 	const saveEditedTask = (id) => { 
 		const editedData = { 
 			task: editedTask, 
-			status: editedStatus, 
+			status: editedStatus,
+			description: editedDescription,
+			category: editedCategory,	 
 			deadline: editedDeadline, 
 		}; 
 
 		// If the fields are empty 
-		if (!editedTask || !editedStatus || !editedDeadline) { 
+		if (!editedTask || !editedStatus || !editedDescription || !editedCategory|| !editedDeadline) { 
 			alert("All fields must be filled out."); 
 			return; 
 		} 
@@ -76,7 +86,9 @@ function Todo() {
 				console.log(result); 
 				setEditableId(null); 
 				setEditedTask(""); 
-				setEditedStatus(""); 
+				setEditedStatus("");
+				setEditedDescription("");
+				setEditedCategory(""); 
 				setEditedDeadline(""); // Clear the edited deadline 
 				window.location.reload(); 
 			}) 
@@ -106,7 +118,9 @@ function Todo() {
 							<thead className="table-primary"> 
 								<tr> 
 									<th>Task</th> 
-									<th>Status</th> 
+									<th>Status</th>
+									<th>Description</th>
+									<th>Category</th> 
 									<th>Deadline</th> 
 									<th>Actions</th> 
 								</tr> 
@@ -137,6 +151,30 @@ function Todo() {
 													/> 
 												) : ( 
 													data.status 
+												)} 
+											</td> 
+											<td> 
+												{editableId === data._id ? ( 
+													<input 
+														type="text"
+														className="form-control"
+														value={editedDescription} 
+														onChange={(e) => setEditedDescription(e.target.value)} 
+													/> 
+												) : ( 
+													data.description
+												)} 
+											</td> 
+											<td> 
+												{editableId === data._id ? ( 
+													<input 
+														type="text"
+														className="form-control"
+														value={editedCategory} 
+														onChange={(e) => setEditedCategory(e.target.value)} 
+													/> 
+												) : ( 
+													data.category
 												)} 
 											</td> 
 											<td> 
@@ -184,12 +222,13 @@ function Todo() {
 				<div className="col-md-5"> 
 					<h2 className="text-center">Add Task</h2> 
 					<form className="bg-light p-4"> 
-						<div className="mb-3"> 
+						<div className="mb-3">
 							<label>Task</label> 
 							<input 
 								className="form-control"
-								type="text"
+								type="string"
 								placeholder="Enter Task"
+								value={newTask}
 								onChange={(e) => setNewTask(e.target.value)} 
 							/> 
 						</div> 
@@ -197,9 +236,31 @@ function Todo() {
 							<label>Status</label> 
 							<input 
 								className="form-control"
-								type="text"
+								type="string"
 								placeholder="Enter Status"
+								value = {newStatus}
 								onChange={(e) => setNewStatus(e.target.value)} 
+							/> 
+						</div> 
+						
+						<div className="mb-3"> 
+							<label>Description</label> 
+							<input 
+								className="form-control"
+								type="string"
+								placeholder="Enter Description"
+								value = {newDescription}
+								onChange={(e) => setNewDescription(e.target.value)} 
+							/> 
+						</div> 
+						<div className="mb-3"> 
+							<label>Category</label> 
+							<input 
+								className="form-control"
+								type="string"
+								placeholder="Enter Category"
+								value = {newCategory}
+								onChange={(e) => setNewCategory(e.target.value)} 
 							/> 
 						</div> 
 						<div className="mb-3"> 
@@ -207,6 +268,7 @@ function Todo() {
 							<input 
 								className="form-control"
 								type="date"
+								placeholder="Enter Deadline"
 								onChange={(e) => setNewDeadline(e.target.value)} 
 							/> 
 						</div> 
